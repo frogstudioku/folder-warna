@@ -8,6 +8,9 @@
     "start": "electron .",
     "dist": "electron-builder --win nsis"
   },
+  "dependencies": {
+    "koffi": "^3.3.6"
+  },
   "devDependencies": {
     "electron": "^45.0.0",
     "electron-builder": "^26.0.0"
