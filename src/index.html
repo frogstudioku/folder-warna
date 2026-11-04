@@ -31,6 +31,12 @@ canvas{border-radius:10px;cursor:crosshair;touch-action:none;border:1px solid va
 #big{height:48px;border-radius:12px;border:1px solid var(--line)}
 input[type=text],select{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 12px;font:inherit;color-scheme:dark}
 #hex{font:600 16px Consolas,monospace;text-align:center;letter-spacing:1px}
+.dd{position:relative}
+#ddb{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:rgba(0,0,0,.28);padding:10px 14px}
+#ddb svg{opacity:.7;transition:.15s}#ddb[aria-expanded=true]{border-color:var(--v)}#ddb[aria-expanded=true] svg{transform:rotate(180deg)}
+#ddl{position:absolute;left:0;right:0;bottom:calc(100% + 6px);margin:0;padding:6px;list-style:none;z-index:20;background:rgba(27,22,52,.97);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.55)}
+#ddl li{padding:9px 12px;border-radius:9px;cursor:pointer}
+#ddl li:hover{background:rgba(139,92,246,.28)}#ddl li.on{background:linear-gradient(135deg,#8b5cf6,#6d3df0);font-weight:600}
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
 #msg{color:var(--mute);font-size:13px}.row{display:flex;gap:10px}
 </style></head><body>
@@ -51,7 +57,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
    <h2>Warna saya <small>klik kanan untuk menghapus</small></h2><div class="sw" id="mine"></div>
   </section>
   <section class="card"><h2>Label di atas folder</h2>
-   <select id="lab"><option value="">Tanpa teks</option><option>To Do</option><option>On Progress</option><option>Waiting Feedback</option><option>Revision</option><option>Cancel</option><option>FA</option></select>
+   <div class="dd"><button type="button" id="ddb" aria-haspopup="listbox" aria-expanded="false"><span id="ddt">Tanpa teks</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><ul id="ddl" role="listbox" hidden></ul></div><select id="lab" hidden><option value="">Tanpa teks</option><option>To Do</option><option>On Progress</option><option>Waiting Feedback</option><option>Revision</option><option>Cancel</option><option>FA</option></select>
   </section>
  </div>
 </main>
@@ -81,7 +87,7 @@ function drawPick(){const c=sv.getContext('2d'),w=sv.width,h=sv.height;
  const d=hu.getContext('2d'),hh=hu.height;g=d.createLinearGradient(0,0,0,hh);for(let i=0;i<=6;i++)g.addColorStop(i/6,`hsl(${i*60},100%,50%)`);
  d.fillStyle=g;d.fillRect(0,0,hu.width,hh);const y=H/360*hh;d.fillStyle='#fff';d.fillRect(0,y-2,hu.width,4);d.strokeStyle='rgba(0,0,0,.6)';d.strokeRect(0,y-2,hu.width,4)}
 function draw(){$('prev').innerHTML=svg();$('big').style.background=color;if(document.activeElement!==$('hex'))$('hex').value=color;
- document.querySelectorAll('.sw i').forEach(e=>e.classList.toggle('on',e.dataset.c===color));drawPick()}
+ document.querySelectorAll('.sw i').forEach(e=>e.classList.toggle('on',e.dataset.c===color));$('ddt').textContent=$('lab').selectedOptions[0].text;[...$('ddl').children].forEach(li=>li.classList.toggle('on',li.dataset.v===$('lab').value));drawPick()}
 function setColor(x){color=x.toLowerCase();const[h,s,v]=hex2hsv(color);if(s>0&&v>0)H=h;S=s;V=v;draw()}
 const drag=(el,fn)=>{el.onpointerdown=e=>{el.setPointerCapture(e.pointerId);fn(e)};el.onpointermove=e=>{if(el.hasPointerCapture(e.pointerId))fn(e)}};
 drag(sv,e=>{const r=sv.getBoundingClientRect();S=clamp((e.clientX-r.left)/r.width);V=1-clamp((e.clientY-r.top)/r.height);color=hsv2hex(H,S,V);draw()});
@@ -93,7 +99,12 @@ function mk(box,c,mine){const e=document.createElement('i');e.style.background=c
 function renderSaved(){const b=$('mine');b.innerHTML=saved.length?'':'<span class="hint">Belum ada. Pilih warna, lalu klik Simpan warna.</span>';saved.forEach(c=>mk(b,c,true));draw()}
 $('save').onclick=()=>{if(!saved.includes(color)){saved.unshift(color);persist()}renderSaved()};
 COL.forEach(c=>mk($('sw'),c));
-$('lab').onchange=draw;
+const ddb=$('ddb'),ddl=$('ddl'),sel=$('lab');
+const openDD=o=>{ddl.hidden=!o;ddb.setAttribute('aria-expanded',String(o))};
+[...sel.options].forEach(o=>{const li=document.createElement('li');li.textContent=o.text;li.dataset.v=o.value;li.setAttribute('role','option');li.onclick=()=>{sel.value=o.value;openDD(false);draw()};ddl.append(li)});
+ddb.onclick=()=>openDD(ddl.hidden);
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('.dd'))openDD(false)});
+ddb.onkeydown=e=>{if(e.key==='Escape')openDD(false);else if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const n=sel.options.length;sel.selectedIndex=(sel.selectedIndex+(e.key==='ArrowDown'?1:n-1))%n;draw()}};
 function setDir(p){dir=p;$('path').textContent=p;$('path').title=p;$('apply').disabled=$('reset').disabled=false;$('msg').textContent=''}
 $('pick').onclick=async()=>{const p=await frog.pick();if(p)setDir(p)};
 frog.onOpen(setDir);
