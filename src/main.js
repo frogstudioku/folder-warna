@@ -26,7 +26,7 @@ ipcMain.handle('pick', async () => {
   const r = await dialog.showOpenDialog({ properties: ['openDirectory'] });
   return r.canceled ? null : r.filePaths[0];
 });
-ipcMain.handle('apply', async (_, dir, b64) => {
+async function applyIcon(dir, b64) {
   if (!isDir(dir)) throw new Error('Folder tidak ditemukan');
   await clean(dir);
   const name = `.folderfrog-${Date.now()}.ico`, di = path.join(dir, 'desktop.ini');
@@ -37,17 +37,34 @@ ipcMain.handle('apply', async (_, dir, b64) => {
   await sh('attrib', ['+r', dir]);
   await refresh();
   return true;
-});
-ipcMain.handle('reset', async (_, dir) => {
+}
+async function resetIcon(dir) {
   if (!isDir(dir)) throw new Error('Folder tidak ditemukan');
   await clean(dir); await sh('attrib', ['-r', dir]); await refresh(); return true;
-});
+}
+ipcMain.handle('apply', (_, d, b) => applyIcon(d, b));
+ipcMain.handle('reset', (_, d) => resetIcon(d));
 
-app.whenReady().then(() => {
+const argv = process.argv.slice(1), qi = argv.indexOf('--quick'), ri = argv.indexOf('--reset');
+const prefs = () => ({ preload: path.join(__dirname, 'preload.js'), contextIsolation: true });
+
+app.whenReady().then(async () => {
+  if (ri > -1) { try { await resetIcon(argv[ri + 1]); } catch {} return app.quit(); }
+  if (qi > -1) {   // klik kanan: warnai tanpa membuka jendela
+    const [dir, color, label] = argv.slice(qi + 1);
+    const w = new BrowserWindow({ show: false, webPreferences: prefs() });
+    try {
+      await w.loadFile(path.join(__dirname, 'index.html'));
+      const b64 = await w.webContents.executeJavaScript(
+        `color=${JSON.stringify(color)};$('lab').value=${JSON.stringify(label)};$('flag').checked=true;png()`);
+      await applyIcon(dir, b64);
+    } catch {}
+    return app.quit();
+  }
   const win = new BrowserWindow({
     width: 980, height: 660, minWidth: 860, minHeight: 600, autoHideMenuBar: true,
-    backgroundColor: '#0d0a1f', title: 'Folder Frog',
-    webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true }
+    backgroundColor: '#0d0a1f', icon: path.join(__dirname, 'icon.png'), title: 'Folder Frog',
+    webPreferences: prefs()
   });
   win.loadFile(path.join(__dirname, 'index.html'));
   const arg = process.argv.slice(1).find(a => !a.startsWith('-') && isDir(a) && path.resolve(a) !== app.getAppPath());
