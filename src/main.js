@@ -56,13 +56,13 @@ app.whenReady().then(async () => {
     try {
       await w.loadFile(path.join(__dirname, 'index.html'));
       const b64 = await w.webContents.executeJavaScript(
-        `color=${JSON.stringify(color)};$('lab').value=${JSON.stringify(label)};$('flag').checked=true;png()`);
+        `color=${JSON.stringify(color)};$('lab').value=${JSON.stringify(label)};png()`);
       await applyIcon(dir, b64);
     } catch {}
     return app.quit();
   }
   const win = new BrowserWindow({
-    width: 980, height: 660, minWidth: 860, minHeight: 600, autoHideMenuBar: true,
+    width: 1000, height: 760, minWidth: 900, minHeight: 720, autoHideMenuBar: true,
     backgroundColor: '#0d0a1f', icon: path.join(__dirname, 'icon.png'), title: 'Folder Frog',
     webPreferences: prefs()
   });
