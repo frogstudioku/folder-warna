@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8"><title>Folder Frog</title>
 <style>
-:root{--ink:#f3f0ff;--mute:#a79fcb;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.055);--v:#8b5cf6;--frog:#7dff8a}
+:root{--ink:#f3f0ff;--mute:#a79fcb;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.055);--v:#8b5cf6}
 *{box-sizing:border-box}
-body{margin:0;height:100vh;font:14px 'Segoe UI',system-ui,sans-serif;color:var(--ink);padding:22px;
+body{margin:0;height:100vh;font:14px 'Segoe UI',system-ui,sans-serif;color:var(--ink);padding:20px;
  background:radial-gradient(900px 500px at 20% -10%,#3b1d8f 0,transparent 60%),radial-gradient(700px 500px at 100% 110%,#2a1470 0,transparent 60%),#0d0a1f;
- display:grid;grid-template-rows:auto 1fr auto;gap:18px;overflow:hidden}
+ display:grid;grid-template-rows:auto 1fr auto;gap:16px;overflow:hidden}
 header{display:flex;align-items:center;gap:12px}
-.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--frog),#2bbf5a);display:grid;place-items:center;font-size:22px}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#7dff8a,#2bbf5a);display:grid;place-items:center;font-size:22px}
 h1{font-size:20px;margin:0;font-weight:600}header p{margin:0;color:var(--mute);font-size:12px}
-main{display:grid;grid-template-columns:1.05fr 1fr;gap:18px;min-height:0}
-.card{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:18px;backdrop-filter:blur(18px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-.col{display:flex;flex-direction:column;gap:18px;min-height:0}
-h2{font-size:12px;font-weight:600;color:var(--mute);margin:0 0 12px}
-#drop{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;border-style:dashed}
+main{display:grid;grid-template-columns:1fr 1.05fr;gap:16px;min-height:0}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:16px;backdrop-filter:blur(18px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.col{display:flex;flex-direction:column;gap:16px;min-height:0;overflow:auto}
+h2{font-size:12px;font-weight:600;color:var(--mute);margin:0 0 10px;display:flex;justify-content:space-between}
+h2 small{font-weight:400;opacity:.7}
+#drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;border-style:dashed}
 #drop.over{border-color:var(--v);background:rgba(139,92,246,.12)}
 #prev{width:230px;height:230px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.45))}
 #path{color:var(--mute);font-size:12px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -21,14 +22,17 @@ button{font:inherit;color:var(--ink);cursor:pointer;border:1px solid var(--line)
 button:hover{background:rgba(255,255,255,.12)}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--v);outline-offset:2px}
 button.primary{background:linear-gradient(135deg,#8b5cf6,#6d3df0);border-color:transparent;font-weight:600;padding:11px 26px}
 button:disabled{opacity:.4;cursor:not-allowed}
-.sw{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:14px}
-.sw i{aspect-ratio:1;border-radius:10px;cursor:pointer;border:2px solid transparent}.sw i.on{border-color:#fff}
-.row{display:flex;gap:10px;align-items:center}
-input[type=color]{width:52px;height:40px;border:1px solid var(--line);border-radius:10px;background:none;padding:2px;cursor:pointer}
-input[type=text],select{flex:1;background:rgba(0,0,0,.28);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:10px 12px;font:inherit;color-scheme:dark}
-label.t{display:flex;align-items:center;gap:8px;margin-top:14px;color:var(--mute);cursor:pointer}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,24px);gap:6px}
+.sw i{width:24px;height:24px;border-radius:7px;cursor:pointer;border:2px solid transparent}.sw i.on{border-color:#fff}
+.hint{color:var(--mute);font-size:12px}
+.pk{display:flex;gap:12px;margin:14px 0}
+canvas{border-radius:10px;cursor:crosshair;touch-action:none;border:1px solid var(--line)}
+.side{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
+#big{height:48px;border-radius:12px;border:1px solid var(--line)}
+input[type=text],select{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 12px;font:inherit;color-scheme:dark}
+#hex{font:600 16px Consolas,monospace;text-align:center;letter-spacing:1px}
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
-#msg{color:var(--mute);font-size:13px}
+#msg{color:var(--mute);font-size:13px}.row{display:flex;gap:10px}
 </style></head><body>
 <header><div class="logo">🐸</div><div><h1>Folder Frog</h1><p>Warnai folder dan beri label status</p></div></header>
 <main>
@@ -40,32 +44,56 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
  <div class="col">
   <section class="card"><h2>Warna folder</h2>
    <div class="sw" id="sw"></div>
-   <div class="row"><input type="color" id="cp" value="#8b5cf6" aria-label="Pilih warna"><input type="text" id="hex" maxlength="7" value="#8b5cf6" aria-label="Kode HEX"></div>
+   <div class="pk">
+    <canvas id="sv" width="210" height="150"></canvas><canvas id="hu" width="22" height="150"></canvas>
+    <div class="side"><div id="big"></div><input type="text" id="hex" maxlength="7" aria-label="Kode warna HEX"><button id="save">Simpan warna</button></div>
+   </div>
+   <h2>Warna saya <small>klik kanan untuk menghapus</small></h2><div class="sw" id="mine"></div>
   </section>
   <section class="card"><h2>Label di atas folder</h2>
    <select id="lab"><option value="">Tanpa teks</option><option>To Do</option><option>On Progress</option><option>Waiting Feedback</option><option>Revision</option><option>Cancel</option><option>FA</option></select>
-   <label class="t"><input type="checkbox" id="flag" checked> Tampilkan ikon flag</label>
   </section>
  </div>
 </main>
 <footer><span id="msg"></span><div class="row"><button id="reset" disabled>Kembalikan default</button><button id="apply" class="primary" disabled>Terapkan</button></div></footer>
 <script>
-const COL=['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#10b981','#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#d946ef','#ec4899','#94a3b8','#475569'];
-const FLAG={'To Do':'#60a5fa','On Progress':'#fb923c','Waiting Feedback':'#facc15','Revision':'#c084fc','Cancel':'#f87171','FA':'#4ade80'};
-const $=id=>document.getElementById(id);let dir=null,color='#8b5cf6';
+const COL=['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#10b981','#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#d946ef','#ec4899','#94a3b8','#475569',
+'#b91c1c','#c2410c','#a16207','#4d7c0f','#15803d','#0f766e','#0e7490','#1d4ed8','#4338ca','#6d28d9','#a21caf','#be185d','#fca5a5','#fde047','#e5e7eb','#78350f'];
+const $=id=>document.getElementById(id);let dir=null,color='#8b5cf6',H=260,S=.62,V=.96,saved=[];
+try{saved=JSON.parse(localStorage.getItem('frog.saved')||'[]')}catch{}
+const persist=()=>{try{localStorage.setItem('frog.saved',JSON.stringify(saved))}catch{}};
+const clamp=x=>Math.max(0,Math.min(1,x));
 const shade=(h,p)=>{const n=parseInt(h.slice(1),16),t=p<0?0:255,k=Math.abs(p);return'#'+[n>>16,n>>8&255,n&255].map(c=>Math.round((t-c)*k+c).toString(16).padStart(2,'0')).join('')};
-function svg(){const l=$('lab').value,f=$('flag').checked,fc=FLAG[l]||'#f8fafc',fs=Math.min(34,190/(l.length*.58||1));
+const hsv2hex=(h,s,v)=>{const f=n=>{const k=(n+h/60)%6;return v-v*s*Math.max(0,Math.min(k,4-k,1))};return'#'+[f(5),f(3),f(1)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join('')};
+const hex2hsv=x=>{const n=parseInt(x.slice(1),16),r=(n>>16)/255,g=(n>>8&255)/255,b=(n&255)/255,m=Math.max(r,g,b),d=m-Math.min(r,g,b);let h=0;if(d){h=m==r?((g-b)/d)%6:m==g?(b-r)/d+2:(r-g)/d+4;h=(h*60+360)%360}return[h,m?d/m:0,m]};
+function svg(){const l=$('lab').value,fs=Math.min(34,190/(l.length*.58||1));
 return `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(color,.18)}"/><stop offset="1" stop-color="${shade(color,-.12)}"/></linearGradient></defs>
 <path d="M24 56a16 16 0 0 1 16-16h62l22 22h92a16 16 0 0 1 16 16v128a16 16 0 0 1-16 16H40a16 16 0 0 1-16-16z" fill="${shade(color,-.38)}"/>
 <rect x="40" y="70" width="176" height="60" rx="6" fill="#fff" opacity=".92"/>
 <path d="M16 100a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16v100a16 16 0 0 1-16 16H32a16 16 0 0 1-16-16z" fill="url(#g)"/>
-${f?`<rect x="188" y="26" width="7" height="92" rx="3" fill="#e5e7eb"/><path d="M195 30C215 20 225 40 247 30V72C225 82 215 62 195 72Z" fill="${fc}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>`:''}
 ${l?`<rect x="28" y="150" width="200" height="46" rx="23" fill="rgba(0,0,0,.5)"/><text x="128" y="${173+fs*.35}" text-anchor="middle" font-family="Segoe UI,Arial" font-weight="700" font-size="${fs}" fill="#fff">${l}</text>`:''}`}
-const draw=()=>{$('prev').innerHTML=svg();$('hex').value=color;$('cp').value=color;[...$('sw').children].forEach(e=>e.classList.toggle('on',e.dataset.c===color))};
-COL.forEach(c=>{const e=document.createElement('i');e.style.background=c;e.dataset.c=c;e.onclick=()=>{color=c;draw()};$('sw').append(e)});
-$('cp').oninput=e=>{color=e.target.value;draw()};
-$('hex').oninput=e=>{if(/^#[0-9a-f]{6}$/i.test(e.target.value)){color=e.target.value.toLowerCase();draw()}};
-$('lab').onchange=draw;$('flag').onchange=draw;
+const sv=$('sv'),hu=$('hu');
+function drawPick(){const c=sv.getContext('2d'),w=sv.width,h=sv.height;
+ c.fillStyle=hsv2hex(H,1,1);c.fillRect(0,0,w,h);
+ let g=c.createLinearGradient(0,0,w,0);g.addColorStop(0,'#fff');g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.fillRect(0,0,w,h);
+ g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'#000');c.fillStyle=g;c.fillRect(0,0,w,h);
+ for(const[r,col]of[[8.5,'rgba(0,0,0,.5)'],[7,'#fff']]){c.beginPath();c.arc(S*w,(1-V)*h,r,0,7);c.lineWidth=2;c.strokeStyle=col;c.stroke()}
+ const d=hu.getContext('2d'),hh=hu.height;g=d.createLinearGradient(0,0,0,hh);for(let i=0;i<=6;i++)g.addColorStop(i/6,`hsl(${i*60},100%,50%)`);
+ d.fillStyle=g;d.fillRect(0,0,hu.width,hh);const y=H/360*hh;d.fillStyle='#fff';d.fillRect(0,y-2,hu.width,4);d.strokeStyle='rgba(0,0,0,.6)';d.strokeRect(0,y-2,hu.width,4)}
+function draw(){$('prev').innerHTML=svg();$('big').style.background=color;if(document.activeElement!==$('hex'))$('hex').value=color;
+ document.querySelectorAll('.sw i').forEach(e=>e.classList.toggle('on',e.dataset.c===color));drawPick()}
+function setColor(x){color=x.toLowerCase();const[h,s,v]=hex2hsv(color);if(s>0&&v>0)H=h;S=s;V=v;draw()}
+const drag=(el,fn)=>{el.onpointerdown=e=>{el.setPointerCapture(e.pointerId);fn(e)};el.onpointermove=e=>{if(el.hasPointerCapture(e.pointerId))fn(e)}};
+drag(sv,e=>{const r=sv.getBoundingClientRect();S=clamp((e.clientX-r.left)/r.width);V=1-clamp((e.clientY-r.top)/r.height);color=hsv2hex(H,S,V);draw()});
+drag(hu,e=>{const r=hu.getBoundingClientRect();H=clamp((e.clientY-r.top)/r.height)*359.9;color=hsv2hex(H,S,V);draw()});
+$('hex').oninput=e=>{let t=e.target.value.trim();if(t[0]!=='#')t='#'+t;if(/^#[0-9a-f]{6}$/i.test(t))setColor(t)};
+$('hex').onblur=draw;
+function mk(box,c,mine){const e=document.createElement('i');e.style.background=c;e.dataset.c=c;e.title=c;e.onclick=()=>setColor(c);
+ if(mine)e.oncontextmenu=ev=>{ev.preventDefault();saved=saved.filter(x=>x!==c);persist();renderSaved()};box.append(e)}
+function renderSaved(){const b=$('mine');b.innerHTML=saved.length?'':'<span class="hint">Belum ada. Pilih warna, lalu klik Simpan warna.</span>';saved.forEach(c=>mk(b,c,true));draw()}
+$('save').onclick=()=>{if(!saved.includes(color)){saved.unshift(color);persist()}renderSaved()};
+COL.forEach(c=>mk($('sw'),c));
+$('lab').onchange=draw;
 function setDir(p){dir=p;$('path').textContent=p;$('apply').disabled=$('reset').disabled=false;$('msg').textContent=''}
 $('pick').onclick=async()=>{const p=await frog.pick();if(p)setDir(p)};
 frog.onOpen(setDir);
@@ -75,5 +103,5 @@ async function png(){const im=new Image();im.src='data:image/svg+xml;charset=utf
 async function run(fn,ok){$('msg').textContent='Memproses…';try{await fn();$('msg').textContent=ok}catch(e){$('msg').textContent='Gagal: '+e.message}}
 $('apply').onclick=()=>run(async()=>frog.apply(dir,await png()),'Folder berhasil diwarnai.');
 $('reset').onclick=()=>run(()=>frog.reset(dir),'Folder dikembalikan ke default.');
-draw();
+renderSaved();setColor(color);
 </script></body></html>
