@@ -13,12 +13,33 @@ function toIco(png) {
   return Buffer.concat([h, png]);
 }
 
-async function clean(dir) {
-  const di = path.join(dir, 'desktop.ini');
-  if (fs.existsSync(di)) { await sh('attrib', ['-s', '-h', di]); fs.rmSync(di, { force: true }); }
-  for (const f of fs.readdirSync(dir)) if (/^\.folderfrog-\d+\.ico$/.test(f)) {
+const ICON = /^\s*(IconResource|IconFile|IconIndex)\s*=/i, OURS = /^\s*IconResource\s*=.*\.folderfrog-\d+\.ico/i;
+async function rmIcos(dir, except) {
+  for (const f of fs.readdirSync(dir)) if (/^\.folderfrog-\d+\.ico$/.test(f) && f !== except) {
     await sh('attrib', ['-h', path.join(dir, f)]); fs.rmSync(path.join(dir, f), { force: true });
   }
+}
+// Ubah desktop.ini tanpa menghapus pengaturan lain. newName=null: hapus hanya ikon milik Folder Frog.
+async function updateIni(dir, newName) {
+  const di = path.join(dir, 'desktop.ini');
+  let lines = [], bom = Buffer.alloc(0), enc = 'latin1';
+  if (fs.existsSync(di)) {
+    await sh('attrib', ['-s', '-h', di]);
+    const b = fs.readFileSync(di); let body = b;
+    if (b[0] === 0xFF && b[1] === 0xFE) { bom = b.subarray(0, 2); enc = 'utf16le'; body = b.subarray(2); }
+    else if (b[0] === 0xEF && b[1] === 0xBB && b[2] === 0xBF) { bom = b.subarray(0, 3); body = b.subarray(3); }
+    lines = body.toString(enc).split(/\r?\n/);
+  }
+  lines = lines.filter(l => newName ? !ICON.test(l) : !OURS.test(l));
+  if (newName) {
+    let i = lines.findIndex(l => /^\s*\[\.ShellClassInfo\]\s*$/i.test(l));
+    if (i < 0) { lines.unshift('[.ShellClassInfo]'); i = 0; }
+    lines.splice(i + 1, 0, `IconResource=${newName},0`);
+  }
+  if (!lines.some(l => l.trim() && !/^\s*\[\.ShellClassInfo\]\s*$/i.test(l))) { fs.rmSync(di, { force: true }); return false; }
+  fs.writeFileSync(di, Buffer.concat([bom, Buffer.from(lines.join('\r\n').replace(/\s*$/, '\r\n'), enc)]));
+  await sh('attrib', ['+s', '+h', di]);
+  return true;
 }
 const isDir = p => { try { return fs.statSync(p).isDirectory(); } catch { return false; } };
 
@@ -28,19 +49,22 @@ ipcMain.handle('pick', async () => {
 });
 async function applyIcon(dir, b64) {
   if (!isDir(dir)) throw new Error('Folder tidak ditemukan');
-  await clean(dir);
-  const name = `.folderfrog-${Date.now()}.ico`, di = path.join(dir, 'desktop.ini');
+  const name = `.folderfrog-${Date.now()}.ico`;
   fs.writeFileSync(path.join(dir, name), toIco(Buffer.from(b64, 'base64')));
-  fs.writeFileSync(di, `[.ShellClassInfo]\r\nIconResource=${name},0\r\n`);
   await sh('attrib', ['+h', path.join(dir, name)]);
-  await sh('attrib', ['+s', '+h', di]);
+  await updateIni(dir, name);
+  await rmIcos(dir, name);
   await sh('attrib', ['+r', dir]);
   await refresh();
   return true;
 }
 async function resetIcon(dir) {
   if (!isDir(dir)) throw new Error('Folder tidak ditemukan');
-  await clean(dir); await sh('attrib', ['-r', dir]); await refresh(); return true;
+  const kept = await updateIni(dir, null);
+  await rmIcos(dir);
+  if (!kept) await sh('attrib', ['-r', dir]);
+  await refresh();
+  return true;
 }
 ipcMain.handle('apply', (_, d, b) => applyIcon(d, b));
 ipcMain.handle('reset', (_, d) => resetIcon(d));
