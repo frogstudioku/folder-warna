@@ -86,7 +86,7 @@ app.whenReady().then(async () => {
     return app.quit();
   }
   const win = new BrowserWindow({
-    width: 1000, height: 760, minWidth: 900, minHeight: 720, autoHideMenuBar: true,
+    width: 1000, height: 720, useContentSize: true, resizable: false, maximizable: false, fullscreenable: false, autoHideMenuBar: true,
     backgroundColor: '#0d0a1f', icon: path.join(__dirname, 'icon.png'), title: 'Folder Frog',
     webPreferences: prefs()
   });

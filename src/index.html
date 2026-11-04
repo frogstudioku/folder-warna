@@ -9,22 +9,22 @@ body{margin:0;height:100vh;font:14px 'Segoe UI',system-ui,sans-serif;color:var(-
 header{display:flex;align-items:center;gap:12px}
 .logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#7dff8a,#2bbf5a);display:grid;place-items:center;font-size:22px}
 h1{font-size:20px;margin:0;font-weight:600}header p{margin:0;color:var(--mute);font-size:12px}
-main{display:grid;grid-template-columns:1fr 1.05fr;gap:16px;min-height:0}
+main{display:grid;grid-template-columns:340px minmax(0,1fr);gap:16px;min-height:0}
 .card{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:16px;backdrop-filter:blur(18px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-.col{display:flex;flex-direction:column;gap:16px;min-height:0;overflow:auto}
-h2{font-size:12px;font-weight:600;color:var(--mute);margin:0 0 10px;display:flex;justify-content:space-between}
+.col{display:flex;flex-direction:column;gap:16px;min-height:0;min-width:0}
+h2{white-space:nowrap;gap:12px;font-size:12px;font-weight:600;color:var(--mute);margin:0 0 10px;display:flex;justify-content:space-between}
 h2 small{font-weight:400;opacity:.7}
-#drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;border-style:dashed}
+#drop{min-width:0;padding:16px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;border-style:dashed}
 #drop.over{border-color:var(--v);background:rgba(139,92,246,.12)}
-#prev{width:230px;height:230px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.45))}
-#path{color:var(--mute);font-size:12px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#prev{width:170px;height:170px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.45))}
+#path{color:var(--mute);font-size:12px;width:100%;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 button{font:inherit;color:var(--ink);cursor:pointer;border:1px solid var(--line);background:var(--glass);border-radius:12px;padding:9px 16px;transition:.15s}
 button:hover{background:rgba(255,255,255,.12)}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--v);outline-offset:2px}
 button.primary{background:linear-gradient(135deg,#8b5cf6,#6d3df0);border-color:transparent;font-weight:600;padding:11px 26px}
 button:disabled{opacity:.4;cursor:not-allowed}
 .sw{display:grid;grid-template-columns:repeat(auto-fill,24px);gap:6px}
 .sw i{width:24px;height:24px;border-radius:7px;cursor:pointer;border:2px solid transparent}.sw i.on{border-color:#fff}
-.hint{color:var(--mute);font-size:12px}
+.hint{grid-column:1/-1;color:var(--mute);font-size:12px}
 .pk{display:flex;gap:12px;margin:14px 0}
 canvas{border-radius:10px;cursor:crosshair;touch-action:none;border:1px solid var(--line)}
 .side{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
@@ -45,7 +45,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
   <section class="card"><h2>Warna folder</h2>
    <div class="sw" id="sw"></div>
    <div class="pk">
-    <canvas id="sv" width="210" height="150"></canvas><canvas id="hu" width="22" height="150"></canvas>
+    <canvas id="sv" width="270" height="170"></canvas><canvas id="hu" width="22" height="170"></canvas>
     <div class="side"><div id="big"></div><input type="text" id="hex" maxlength="7" aria-label="Kode warna HEX"><button id="save">Simpan warna</button></div>
    </div>
    <h2>Warna saya <small>klik kanan untuk menghapus</small></h2><div class="sw" id="mine"></div>
@@ -94,7 +94,7 @@ function renderSaved(){const b=$('mine');b.innerHTML=saved.length?'':'<span clas
 $('save').onclick=()=>{if(!saved.includes(color)){saved.unshift(color);persist()}renderSaved()};
 COL.forEach(c=>mk($('sw'),c));
 $('lab').onchange=draw;
-function setDir(p){dir=p;$('path').textContent=p;$('apply').disabled=$('reset').disabled=false;$('msg').textContent=''}
+function setDir(p){dir=p;$('path').textContent=p;$('path').title=p;$('apply').disabled=$('reset').disabled=false;$('msg').textContent=''}
 $('pick').onclick=async()=>{const p=await frog.pick();if(p)setDir(p)};
 frog.onOpen(setDir);
 const dz=$('drop');dz.ondragover=e=>{e.preventDefault();dz.classList.add('over')};dz.ondragleave=()=>dz.classList.remove('over');
