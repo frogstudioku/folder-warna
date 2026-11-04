@@ -1,0 +1,26 @@
+{
+  "name": "folder-frog",
+  "productName": "Folder Frog",
+  "version": "1.0.0",
+  "description": "Beri warna dan label status pada folder Windows",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.folderfrog.app",
+    "productName": "Folder Frog",
+    "files": ["src/**/*", "package.json"],
+    "win": { "target": "nsis" },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  }
+}
