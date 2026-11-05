@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const fs = require('fs'), path = require('path'), { execFile } = require('child_process');
 
 const sh = (cmd, args) => new Promise(r => execFile(cmd, args, { windowsHide: true }, () => r()));
@@ -74,6 +74,9 @@ async function updateIni(dir, newName) {
 }
 const isDir = p => { try { return fs.statSync(p).isDirectory(); } catch { return false; } };
 
+ipcMain.handle('version', () => app.getVersion());
+ipcMain.handle('doc', (_, n) => ['LICENSE.txt', 'THIRD-PARTY-NOTICES.txt'].includes(n)
+  ? shell.openPath(path.join(app.isPackaged ? process.resourcesPath : app.getAppPath(), n)) : '');
 ipcMain.handle('pick', async () => {
   const r = await dialog.showOpenDialog({ properties: ['openDirectory'] });
   return r.canceled ? null : r.filePaths[0];
