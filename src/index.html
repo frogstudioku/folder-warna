@@ -37,10 +37,15 @@ input[type=text],select{width:100%;background:rgba(0,0,0,.28);border:1px solid v
 #ddl{position:absolute;left:0;right:0;bottom:calc(100% + 6px);margin:0;padding:6px;list-style:none;z-index:20;background:rgba(27,22,52,.97);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.55)}
 #ddl li{padding:9px 12px;border-radius:9px;cursor:pointer}
 #ddl li:hover{background:rgba(139,92,246,.28)}#ddl li.on{background:linear-gradient(135deg,#8b5cf6,#6d3df0);font-weight:600}
+.ghost{margin-left:auto;background:none;border:0;padding:4px 0;font-size:13px;color:var(--mute)}.ghost:hover{background:none;color:var(--ink)}
+#ab{position:fixed;inset:0;display:grid;place-items:center;z-index:50;background:rgba(5,3,15,.65)}#ab[hidden]{display:none}
+.mod{width:340px;padding:26px;text-align:center;background:#1b1630;border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:6px}
+.mod .logo{width:64px;height:64px;border-radius:18px;font-size:36px;margin:0 auto 6px}.mod h3{margin:0;font-size:20px}.mod p{margin:0;color:var(--mute);font-size:13px}
+.mod .row{justify-content:center;margin:12px 0 6px;flex-wrap:wrap}
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
 #msg{color:var(--mute);font-size:13px}.row{display:flex;gap:10px}
 </style></head><body>
-<header><div class="logo">🐸</div><div><h1>Folder Frog</h1><p>Warnai folder dan beri label status</p></div></header>
+<header><div class="logo">🐸</div><div><h1>Folder Frog</h1><p>Warnai folder dan beri label status</p></div><button id="about" class="ghost" title="Tentang aplikasi">Versi 1.0.0</button></header>
 <main>
  <section class="card" id="drop">
   <svg id="prev" viewBox="0 0 256 256"></svg>
@@ -61,7 +66,8 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
   </section>
  </div>
 </main>
-<footer><span id="msg"></span><div class="row"><button id="reset" disabled>Kembalikan default</button><button id="apply" class="primary" disabled>Terapkan</button></div></footer>
+<div id="ab" hidden><div class="mod"><div class="logo">🐸</div><h3>Folder Frog</h3><p>Version <span id="ver">1.0.0</span></p><p>© 2026 Ari Fitriansyah<br>All rights reserved.</p><div class="row"><button id="lic">Lisensi (EULA)</button><button id="third">Lisensi pihak ketiga</button></div><button id="abx" class="primary">Tutup</button></div></div>
+<footer><div><div id="msg"></div><div class="hint" id="copy">© 2026 Ari Fitriansyah. All rights reserved.</div></div><div class="row"><button id="reset" disabled>Kembalikan default</button><button id="apply" class="primary" disabled>Terapkan</button></div></footer>
 <script>
 const COL=['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#10b981','#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#d946ef','#ec4899','#94a3b8','#475569',
 '#b91c1c','#c2410c','#a16207','#4d7c0f','#15803d','#0f766e','#0e7490','#1d4ed8','#4338ca','#6d28d9','#a21caf','#be185d','#fca5a5','#fde047','#e5e7eb','#78350f'];
@@ -114,5 +120,9 @@ async function png(){const im=new Image();im.src='data:image/svg+xml;charset=utf
 async function run(fn,ok){$('msg').textContent='Memproses…';try{await fn();$('msg').textContent=ok}catch(e){$('msg').textContent='Gagal: '+e.message}}
 $('apply').onclick=()=>run(async()=>frog.apply(dir,await png()),'Folder berhasil diwarnai.');
 $('reset').onclick=()=>run(()=>frog.reset(dir),'Folder dikembalikan ke default.');
+frog.version().then(v=>{$('ver').textContent=v;$('about').textContent='Versi '+v}).catch(()=>{});
+$('about').onclick=()=>$('ab').hidden=false;$('abx').onclick=()=>$('ab').hidden=true;
+$('ab').onclick=e=>{if(e.target.id==='ab')$('ab').hidden=true};document.addEventListener('keydown',e=>{if(e.key==='Escape')$('ab').hidden=true});
+$('lic').onclick=()=>frog.doc('LICENSE.txt');$('third').onclick=()=>frog.doc('THIRD-PARTY-NOTICES.txt');
 renderSaved();setColor(color);
 </script></body></html>
