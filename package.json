@@ -18,12 +18,27 @@
   "build": {
     "appId": "com.folderfrog.app",
     "productName": "Folder Frog",
-    "files": ["src/**/*", "package.json"],
-    "win": { "target": "nsis" },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
-    }
-  }
+      "createDesktopShortcut": true,
+      "license": "LICENSE.txt"
+    },
+    "copyright": "Copyright © 2026 Ari Fitriansyah",
+    "extraResources": [
+      "LICENSE.txt",
+      "THIRD-PARTY-NOTICES.txt"
+    ]
+  },
+  "author": {
+    "name": "Ari Fitriansyah"
+  },
+  "license": "SEE LICENSE IN LICENSE.txt"
 }

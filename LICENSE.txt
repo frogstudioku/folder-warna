@@ -1,0 +1,47 @@
+FOLDER FROG - END USER LICENSE AGREEMENT (EULA)
+Version 1.0.0
+(c) 2026 Ari Fitriansyah. All rights reserved.
+
+=== ENGLISH ===
+
+By installing or using Folder Frog ("the Software") you agree to these terms.
+
+1. License. Ari Fitriansyah ("the Author") grants you a non-exclusive, non-transferable, revocable license to install and use the Software for personal or commercial work. One license is for one person, who may use it on the devices he or she owns or controls.
+
+2. Ownership. The Software, including its code, design, icon and name, is licensed, not sold. The Author keeps all copyright and other rights. No ownership is transferred to you.
+
+3. Restrictions. You may not: (a) copy or redistribute the Software, except one backup copy; (b) sell, rent, share or sublicense the Software or your license key; (c) reverse engineer, decompile or modify the Software, except where the law allows it despite this restriction; (d) remove copyright notices.
+
+4. What the Software does. Folder Frog changes the look of folders you select by creating a hidden desktop.ini file and a hidden .ico file inside each folder and by changing folder attributes. Keep backups of important data. "Reset" removes only the icon settings created by the Software.
+
+5. Third-party components. The Software includes open-source components. Their licenses are listed in THIRD-PARTY-NOTICES.txt and remain valid for those components.
+
+6. No warranty. The Software is provided "AS IS", without warranty of any kind, express or implied, including fitness for a particular purpose.
+
+7. Limitation of liability. To the maximum extent allowed by law, the Author is not liable for any indirect or consequential damages, or loss of data, arising from the use of the Software.
+
+8. Termination. This license ends automatically if you break these terms. You must then stop using the Software and delete all copies.
+
+9. Governing law. These terms are governed by the laws of the Republic of Indonesia.
+
+=== BAHASA INDONESIA ===
+
+Dengan memasang atau memakai Folder Frog ("Perangkat Lunak") Anda menyetujui ketentuan berikut.
+
+1. Lisensi. Ari Fitriansyah ("Pencipta") memberi Anda lisensi non-eksklusif, tidak dapat dipindahtangankan, dan dapat dicabut untuk memasang dan memakai Perangkat Lunak untuk pekerjaan pribadi maupun komersial. Satu lisensi untuk satu orang, yang boleh memakainya di perangkat miliknya sendiri.
+
+2. Kepemilikan. Perangkat Lunak, termasuk kode, desain, ikon, dan namanya, dilisensikan dan tidak dijual. Seluruh hak cipta dan hak lainnya tetap milik Pencipta. Tidak ada hak milik yang berpindah kepada Anda.
+
+3. Pembatasan. Anda tidak boleh: (a) menyalin atau mendistribusikan ulang Perangkat Lunak, kecuali satu salinan cadangan; (b) menjual, menyewakan, membagikan, atau mensublisensikan Perangkat Lunak atau kunci lisensi Anda; (c) melakukan rekayasa balik, dekompilasi, atau mengubah Perangkat Lunak, kecuali hukum tetap mengizinkannya; (d) menghapus pemberitahuan hak cipta.
+
+4. Cara kerja. Folder Frog mengubah tampilan folder yang Anda pilih dengan membuat file tersembunyi desktop.ini dan .ico di dalam folder tersebut serta mengubah atribut folder. Simpan cadangan data penting. Fitur "Kembalikan default" hanya menghapus pengaturan ikon yang dibuat oleh Perangkat Lunak.
+
+5. Komponen pihak ketiga. Perangkat Lunak memuat komponen sumber terbuka. Lisensinya tercantum di THIRD-PARTY-NOTICES.txt dan tetap berlaku untuk komponen tersebut.
+
+6. Tanpa jaminan. Perangkat Lunak disediakan "APA ADANYA", tanpa jaminan apa pun, tersurat maupun tersirat, termasuk kesesuaian untuk tujuan tertentu.
+
+7. Batasan tanggung jawab. Sejauh diizinkan hukum, Pencipta tidak bertanggung jawab atas kerugian tidak langsung atau kerugian turunan, maupun kehilangan data, akibat penggunaan Perangkat Lunak.
+
+8. Pengakhiran. Lisensi berakhir otomatis jika Anda melanggar ketentuan ini. Anda harus berhenti memakai dan menghapus semua salinan Perangkat Lunak.
+
+9. Hukum yang berlaku. Ketentuan ini tunduk pada hukum Republik Indonesia.
