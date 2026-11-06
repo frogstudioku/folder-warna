@@ -74,6 +74,17 @@ async function updateIni(dir, newName) {
 }
 const isDir = p => { try { return fs.statSync(p).isDirectory(); } catch { return false; } };
 
+const RK = 'HKCU\\Software\\FolderFrog', MK = 'HKCU\\Software\\Classes\\Directory\\shell\\FolderFrog\\shell\\';
+const reg = (...a) => new Promise(r => execFile('reg', a, { windowsHide: true }, (e, out) => r(out || '')));
+ipcMain.handle('getLang', async () => { const m = (await reg('query', RK, '/v', 'Lang')).match(/Lang\s+REG_SZ\s+(\S+)/); return m ? m[1] : 'en'; });
+ipcMain.handle('setLang', async (_, c, open, reset) => {
+  if (!/^[a-z]{2}$/.test(c)) return;
+  await reg('add', RK, '/v', 'Lang', '/d', c, '/f');
+  if (app.isPackaged) {   // perbarui teks menu klik kanan sesuai bahasa
+    await reg('add', MK + '01open', '/v', 'MUIVerb', '/d', String(open), '/f');
+    await reg('add', MK + '08reset', '/v', 'MUIVerb', '/d', String(reset), '/f');
+  }
+});
 ipcMain.handle('version', () => app.getVersion());
 ipcMain.handle('doc', (_, n) => ['LICENSE.txt', 'THIRD-PARTY-NOTICES.txt'].includes(n)
   ? shell.openPath(path.join(app.isPackaged ? process.resourcesPath : app.getAppPath(), n)) : '');
@@ -112,7 +123,7 @@ app.whenReady().then(async () => {
     const [dir, color, label] = argv.slice(qi + 1);
     const w = new BrowserWindow({ show: false, webPreferences: prefs() });
     try {
-      await w.loadFile(path.join(__dirname, 'index.html'));
+      await w.loadFile(path.join(__dirname, 'index.html'), { query: { q: '1' } });
       const b64 = await w.webContents.executeJavaScript(
         `color=${JSON.stringify(color)};$('lab').value=${JSON.stringify(label)};png()`);
       await applyIcon(dir, b64);

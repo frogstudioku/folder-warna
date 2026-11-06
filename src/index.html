@@ -34,10 +34,12 @@ input[type=text],select{width:100%;background:rgba(0,0,0,.28);border:1px solid v
 .dd{position:relative}
 #ddb{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:rgba(0,0,0,.28);padding:10px 14px}
 #ddb svg{opacity:.7;transition:.15s}#ddb[aria-expanded=true]{border-color:var(--v)}#ddb[aria-expanded=true] svg{transform:rotate(180deg)}
-#ddl{position:absolute;left:0;right:0;bottom:calc(100% + 6px);margin:0;padding:6px;list-style:none;z-index:20;background:rgba(27,22,52,.97);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.55)}
-#ddl li{padding:9px 12px;border-radius:9px;cursor:pointer}
-#ddl li:hover{background:rgba(139,92,246,.28)}#ddl li.on{background:linear-gradient(135deg,#8b5cf6,#6d3df0);font-weight:600}
-img.logo{background:none!important;border-radius:0!important;object-fit:contain}.ghost{margin-left:auto;background:none;border:0;padding:4px 0;font-size:13px;color:var(--mute)}.ghost:hover{background:none;color:var(--ink)}
+#ddl,#ll{position:absolute;left:0;right:0;bottom:calc(100% + 6px);margin:0;padding:6px;list-style:none;z-index:20;background:rgba(27,22,52,.97);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.55)}
+#ddl li,#ll li{padding:9px 12px;border-radius:9px;cursor:pointer}
+#ddl li:hover,#ll li:hover{background:rgba(139,92,246,.28)}#ddl li.on,#ll li.on{background:linear-gradient(135deg,#8b5cf6,#6d3df0);font-weight:600}
+img.logo{background:none!important;border-radius:0!important;object-fit:contain}#hex,#copy,#path{direction:ltr;unicode-bidi:isolate}
+.hr{margin-inline-start:auto;display:flex;gap:22px;align-items:center}#ll{bottom:auto;top:calc(100% + 6px);left:auto;right:0;min-width:180px;white-space:nowrap}[dir=rtl] #ll{right:auto;left:0}
+.ghost{background:none;border:0;padding:4px 0;font-size:13px;color:var(--mute)}.ghost:hover{background:none;color:var(--ink)}
 #ab{position:fixed;inset:0;display:grid;place-items:center;z-index:50;background:rgba(5,3,15,.65)}#ab[hidden]{display:none}
 .mod{width:340px;padding:26px;text-align:center;background:#1b1630;border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:6px}
 .mod .logo{width:64px;height:64px;border-radius:18px;font-size:36px;margin:0 auto 6px}.mod h3{margin:0;font-size:20px}.mod p{margin:0;color:var(--mute);font-size:13px}
@@ -45,29 +47,30 @@ img.logo{background:none!important;border-radius:0!important;object-fit:contain}
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
 #msg{color:var(--mute);font-size:13px}.row{display:flex;gap:10px}
 </style></head><body>
-<header><img class="logo" src="icon.png" alt="Folder Frog"><div><h1>Folder Frog</h1><p>Warnai folder dan beri label status</p></div><button id="about" class="ghost" title="Tentang aplikasi">Versi 1.0.0</button></header>
+<header><img class="logo" src="icon.png" alt="Folder Frog"><div><h1>Folder Frog</h1><p data-i="sub"></p></div><div class="hr"><div class="dd lang"><button id="lb" class="ghost"></button><ul id="ll" hidden></ul></div><button id="about" class="ghost">Version 1.0.0</button></div></header>
 <main>
  <section class="card" id="drop">
   <svg id="prev" viewBox="0 0 256 256"></svg>
-  <div id="path">Belum ada folder dipilih. Seret folder ke sini.</div>
-  <button id="pick">Pilih folder</button>
+  <div id="path"></div>
+  <button id="pick" data-i="pick"></button>
  </section>
  <div class="col">
-  <section class="card"><h2>Warna folder</h2>
+  <section class="card"><h2 data-i="colors"></h2>
    <div class="sw" id="sw"></div>
    <div class="pk">
     <canvas id="sv" width="270" height="170"></canvas><canvas id="hu" width="22" height="170"></canvas>
-    <div class="side"><div id="big"></div><input type="text" id="hex" maxlength="7" aria-label="Kode warna HEX"><button id="save">Simpan warna</button></div>
+    <div class="side"><div id="big"></div><input type="text" id="hex" maxlength="7" aria-label="Kode warna HEX"><button id="save" data-i="save"></button></div>
    </div>
-   <h2>Warna saya <small>klik kanan untuk menghapus</small></h2><div class="sw" id="mine"></div>
+   <h2><span data-i="mine"></span><small data-i="mineHint"></small></h2><div class="sw" id="mine"></div>
   </section>
-  <section class="card"><h2>Label di atas folder</h2>
+  <section class="card"><h2 data-i="label"></h2>
    <div class="dd"><button type="button" id="ddb" aria-haspopup="listbox" aria-expanded="false"><span id="ddt">Tanpa teks</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><ul id="ddl" role="listbox" hidden></ul></div><select id="lab" hidden><option value="">Tanpa teks</option><option>To Do</option><option>On Progress</option><option>Waiting Feedback</option><option>Revision</option><option>Cancel</option><option>FA</option></select>
   </section>
  </div>
 </main>
-<div id="ab" hidden><div class="mod"><img class="logo" src="icon.png" alt=""><h3>Folder Frog</h3><p>Version <span id="ver">1.0.0</span></p><p>© 2026 Ari Fitriansyah<br>All rights reserved.</p><div class="row"><button id="lic">Lisensi (EULA)</button><button id="third">Lisensi pihak ketiga</button></div><button id="abx" class="primary">Tutup</button></div></div>
-<footer><div><div id="msg"></div><div class="hint" id="copy">© 2026 Ari Fitriansyah. All rights reserved.</div></div><div class="row"><button id="reset" disabled>Kembalikan default</button><button id="apply" class="primary" disabled>Terapkan</button></div></footer>
+<div id="ab" hidden><div class="mod"><img class="logo" src="icon.png" alt=""><h3>Folder Frog</h3><p><span data-i="ver"></span> <span id="ver">1.0.0</span></p><p>© 2026 Ari Fitriansyah<br>All rights reserved.</p><div class="row"><button id="lic" data-i="eula"></button><button id="third" data-i="third"></button></div><button id="abx" class="primary" data-i="close"></button></div></div>
+<footer><div><div id="msg"></div><div class="hint" id="copy">© 2026 Ari Fitriansyah. All rights reserved.</div></div><div class="row"><button id="reset" data-i="reset" disabled></button><button id="apply" class="primary" data-i="apply" disabled></button></div></footer>
+<script src="i18n.js"></script>
 <script>
 const COL=['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#10b981','#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#d946ef','#ec4899','#94a3b8','#475569',
 '#b91c1c','#c2410c','#a16207','#4d7c0f','#15803d','#0f766e','#0e7490','#1d4ed8','#4338ca','#6d28d9','#a21caf','#be185d','#fca5a5','#fde047','#e5e7eb','#78350f'];
@@ -102,7 +105,7 @@ $('hex').oninput=e=>{let t=e.target.value.trim();if(t[0]!=='#')t='#'+t;if(/^#[0-
 $('hex').onblur=draw;
 function mk(box,c,mine){const e=document.createElement('i');e.style.background=c;e.dataset.c=c;e.title=c;e.onclick=()=>setColor(c);
  if(mine)e.oncontextmenu=ev=>{ev.preventDefault();saved=saved.filter(x=>x!==c);persist();renderSaved()};box.append(e)}
-function renderSaved(){const b=$('mine');b.innerHTML=saved.length?'':'<span class="hint">Belum ada. Pilih warna, lalu klik Simpan warna.</span>';saved.forEach(c=>mk(b,c,true));draw()}
+function renderSaved(){const b=$('mine');b.innerHTML=saved.length?'':'<span class="hint">'+t('none')+'</span>';saved.forEach(c=>mk(b,c,true));draw()}
 $('save').onclick=()=>{if(!saved.includes(color)){saved.unshift(color);persist()}renderSaved()};
 COL.forEach(c=>mk($('sw'),c));
 const ddb=$('ddb'),ddl=$('ddl'),sel=$('lab');
@@ -117,10 +120,21 @@ frog.onOpen(setDir);
 const dz=$('drop');dz.ondragover=e=>{e.preventDefault();dz.classList.add('over')};dz.ondragleave=()=>dz.classList.remove('over');
 dz.ondrop=e=>{e.preventDefault();dz.classList.remove('over');const f=e.dataTransfer.files[0];if(f)setDir(frog.pathOf(f))};
 async function png(){const im=new Image();im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">${svg()}</svg>`);await im.decode();const c=document.createElement('canvas');c.width=c.height=256;c.getContext('2d').drawImage(im,0,0);return c.toDataURL('image/png').split(',')[1]}
-async function run(fn,ok){$('msg').textContent='Memproses…';try{await fn();$('msg').textContent=ok}catch(e){$('msg').textContent='Gagal: '+e.message}}
-$('apply').onclick=()=>run(async()=>frog.apply(dir,await png()),'Folder berhasil diwarnai.');
-$('reset').onclick=()=>run(()=>frog.reset(dir),'Folder dikembalikan ke default.');
-frog.version().then(v=>{$('ver').textContent=v;$('about').textContent='Versi '+v}).catch(()=>{});
+async function run(fn,ok){$('msg').textContent=t('busy');try{await fn();$('msg').textContent=t(ok)}catch(e){$('msg').textContent=t('fail')+e.message}}
+$('apply').onclick=()=>run(async()=>frog.apply(dir,await png()),'ok');
+$('reset').onclick=()=>run(()=>frog.reset(dir),'done');
+let LANG='en',VER='1.0.0';const t=k=>I18N[LANG][k]||I18N.en[k];
+const lb=$('lb'),ll=$('ll'),setVer=()=>{$('about').textContent=t('ver')+' '+VER};
+Object.keys(I18N).forEach(c=>{const li=document.createElement('li');li.textContent=I18N[c].n;li.dataset.c=c;li.onclick=()=>{ll.hidden=true;applyLang(c);frog.setLang(c,t('menuOpen'),t('reset')).catch(()=>{})};ll.append(li)});
+lb.onclick=()=>{ll.hidden=!ll.hidden};document.addEventListener('pointerdown',e=>{if(!e.target.closest('.lang'))ll.hidden=true});
+function applyLang(c){LANG=I18N[c]?c:'en';const r=document.documentElement;r.lang=LANG;r.dir=LANG==='ar'?'rtl':'ltr';
+ document.querySelectorAll('[data-i]').forEach(e=>{e.textContent=t(e.dataset.i)});
+ sel.options[0].text=ddl.children[0].textContent=t('notext');lb.textContent=I18N[LANG].n+' ▾';lb.title=t('language');
+ [...ll.children].forEach(li=>li.classList.toggle('on',li.dataset.c===LANG));
+ if(!dir)$('path').textContent=t('drop');setVer();renderSaved()}
+applyLang('en');
+frog.version().then(v=>{VER=v;$('ver').textContent=v;setVer()}).catch(()=>{});
+if(!location.search.includes('q=1'))frog.getLang().then(c=>{applyLang(c);frog.setLang(LANG,t('menuOpen'),t('reset'))}).catch(()=>{});
 $('about').onclick=()=>$('ab').hidden=false;$('abx').onclick=()=>$('ab').hidden=true;
 $('ab').onclick=e=>{if(e.target.id==='ab')$('ab').hidden=true};document.addEventListener('keydown',e=>{if(e.key==='Escape')$('ab').hidden=true});
 $('lic').onclick=()=>frog.doc('LICENSE.txt');$('third').onclick=()=>frog.doc('THIRD-PARTY-NOTICES.txt');

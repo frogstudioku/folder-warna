@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer, webUtils } = require('electron');
 contextBridge.exposeInMainWorld('frog', {
+  getLang: () => ipcRenderer.invoke('getLang'),
+  setLang: (c, a, b) => ipcRenderer.invoke('setLang', c, a, b),
   version: () => ipcRenderer.invoke('version'),
   doc: n => ipcRenderer.invoke('doc', n),
   pick: () => ipcRenderer.invoke('pick'),
