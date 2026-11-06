@@ -29,7 +29,21 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "license": "LICENSE.txt"
+      "license": "LICENSE.txt",
+      "displayLanguageSelector": true,
+      "multiLanguageInstaller": true,
+      "installerLanguages": [
+        "en_US",
+        "id_ID",
+        "zh_CN",
+        "ja_JP",
+        "ko_KR",
+        "es_ES",
+        "fr_FR",
+        "de_DE",
+        "pt_BR",
+        "ar_SA"
+      ]
     },
     "copyright": "Copyright © 2026 Ari Fitriansyah",
     "extraResources": [
